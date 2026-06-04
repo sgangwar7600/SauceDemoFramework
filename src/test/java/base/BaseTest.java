@@ -40,7 +40,8 @@ public class BaseTest {
         // Maximize window
         driver.manage().window().maximize();
     }
-
+// SauceDemo Automation Framework
+    
     @AfterMethod
     public void tearDown() {
 
