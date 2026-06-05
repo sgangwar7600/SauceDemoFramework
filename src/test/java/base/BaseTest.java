@@ -19,7 +19,7 @@ public class BaseTest {
     @BeforeMethod
     public void setup() {
 
-        // Load config file
+        // Load config filee
         config =
                 PropertyReader
                 .getProperties("config.properties");
