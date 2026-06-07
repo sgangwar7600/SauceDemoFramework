@@ -27,6 +27,12 @@ pipeline {
             }
         }
 
+        stage('Start Selenium Grid') {
+            steps {
+                bat 'docker compose up -d'
+            }
+        }
+
         stage('Run Tests') {
             steps {
                 bat 'mvn clean test -Dsurefire.suiteXmlFiles=testng.xml'
@@ -37,6 +43,8 @@ pipeline {
     post {
 
         always {
+
+            bat 'docker compose down'
 
             archiveArtifacts(
                 artifacts: 'Output/**/*',
@@ -58,4 +66,3 @@ pipeline {
         }
     }
 }
-
