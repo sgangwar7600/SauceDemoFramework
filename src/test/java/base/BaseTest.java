@@ -2,7 +2,9 @@ package base;
 
 import java.time.Duration;
 import java.util.Properties;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -13,22 +15,31 @@ import utils.PropertyReader;
 public class BaseTest {
 
     protected WebDriver driver;
-
     protected Properties config;
-
+    
+    private static final Logger log =
+            LogManager.getLogger(BaseTest.class);
+    
     @BeforeMethod
     public void setup() {
 
-        // Load config filee
-        config =
-                PropertyReader
-                .getProperties("config.properties");
+        // Load config
+        config = PropertyReader.getProperties(
+                "config.properties");
+
+        log.info("Starting Test Execution");
 
         // Initialize browser
-        driver =
-                DriverFactory.initDriver(
-                        config.getProperty("browser"));
+        driver = DriverFactory.initDriver(
 
+                config.getProperty("browser"),
+
+                config.getProperty("execution"),
+
+                config.getProperty("grid.url"));
+
+        log.info("Launching URL: {}",
+                config.getProperty("url"));
         // Open application
         driver.get(config.getProperty("url"));
 
@@ -37,16 +48,16 @@ public class BaseTest {
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(10));
 
-        // Maximize window
-        driver.manage().window().maximize();
+        // Browser size
+        driver.manage()
+                .window()
+                .setSize(new Dimension(1920, 1080));
     }
 
     @AfterMethod
     public void tearDown() {
+    	//log.info("Closing Browser");
+        DriverFactory.quitDriver();
 
-        if(driver != null) {
-
-            driver.quit();
-        }
     }
 }
