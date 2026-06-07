@@ -8,6 +8,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 
 import utils.DriverFactory;
 import utils.PropertyReader;
@@ -21,7 +22,9 @@ public class BaseTest {
             LogManager.getLogger(BaseTest.class);
     
     @BeforeMethod
-    public void setup() {
+    @Parameters("browser")
+    public void setup(String browser)
+    {
 
         // Load config
         config = PropertyReader.getProperties(
@@ -31,11 +34,8 @@ public class BaseTest {
 
         // Initialize browser
         driver = DriverFactory.initDriver(
-
-                config.getProperty("browser"),
-
+                browser,
                 config.getProperty("execution"),
-
                 config.getProperty("grid.url"));
 
         log.info("Launching URL: {}",
